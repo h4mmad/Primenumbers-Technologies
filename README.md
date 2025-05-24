@@ -21,3 +21,6 @@ python3 scraper.py
 ## Challenges
 
 For some of the projects, data appears out of order, so selecting by XPATH or CSS-SELECTOR is not useful. Instead use regex to get the label name and it's neighbour is the value.
+
+## Output
+![alt text](image.png)
