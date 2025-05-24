@@ -4,6 +4,7 @@ The script is used to scrape `https://rera.odisha.gov.in/projects/project-list`.
 The site uses Angular JS, and is not static, therefore selenium web driver was
 used to interact and use the provided JS load `html` into `app root`.
 
+Added scroll, to mimick human mouse movement
 
 ## Usage
 
