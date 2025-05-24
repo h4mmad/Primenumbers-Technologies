@@ -6,6 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import re
 
 
+# The function takes in two html documents
+# The project overview page is parsed first, from the firs 6 given prjects the project appeared as the first child
 def soupParse(project_overview, promoter_details):
     soup = BeautifulSoup(project_overview, "html.parser")
     project_name_el = soup.select_one(
@@ -14,6 +16,8 @@ def soupParse(project_overview, promoter_details):
     rera_regd_no_el = soup.select_one(
         "#mainContent > div > div > app-project-overview > div > div.project-details.mb-4 > div > div.card-body > div > div:nth-child(1) > div:nth-child(4) > div.details-project.ms-3 > strong"
     )
+
+    # get_text will strip the text content from the tags
     if project_name_el and rera_regd_no_el:
         project_name = project_name_el.get_text(strip=True)
         rera_regd_no = rera_regd_no_el.get_text(strip=True)
@@ -21,8 +25,11 @@ def soupParse(project_overview, promoter_details):
         print(f"Project name: {project_name}")
         print(f"RERA Regd. No.: {rera_regd_no}")
 
+    # parse the second document
     soup = BeautifulSoup(promoter_details, "html.parser")
 
+    # the gst label does not appear in the same order for every project
+    # regex is used to parse the label with 'GST' and select the next sibling which will be the value
     gst_label = soup.find("label", string=re.compile(r"\bGST\s*No\.?\b", re.I))
     if not gst_label:
         return None  # no GST label on this page
@@ -47,6 +54,7 @@ def soupParse(project_overview, promoter_details):
         return None
     address = address_el.get_text(strip=True)
 
+    # Company and Registered office usually appear in the same order, however we can use regex if the order breaks
     company_name_el = soup.select_one(
         "#mainContent > div > div > app-promoter-details > div.promoter.mb-4 > div > div.card-body > div > div:nth-child(1) > div > div.ms-3 > strong"
     )
@@ -109,6 +117,7 @@ def selenium_navigator():
                 "/div/div[1]/div/div[2]"
                 "/div/div[1]/div[1]/div[2]",
             )
+            # scroll so that the data appears into view.
             driver.execute_script(
                 "arguments[0].scrollIntoView({block: 'center'});", element
             )
